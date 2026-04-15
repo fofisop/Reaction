@@ -3,7 +3,31 @@
     
     <title>Reactio</title>
     <style>
+        body:active #game-container {
+            transform: scale(0.98);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.05s ease;
+        }
+        body{
+            display: flex;
+            margin: 0;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #3498db;
+            transition: background-color 0.1s ease;
 
+        }
+        #game-container {
+            text-align: center;
+             background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+h1 { margin: 0;}
+.stats { margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px
        
     </style>
 </head>
