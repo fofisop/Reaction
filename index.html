@@ -1,65 +1,83 @@
 <html>
 <head>
-    <title>reaction</title>
-   
+    
+    <title>Reactio</title>
+    <style>
 
+       
+    </style>
 </head>
-
 <body>
+
 <div id="game-container">
-        <h1 id="target">Click to Start</h1>
-        <p id="result">Wait for the screen to turn green!</p>
-        <div class="stats">
-            <p>Your High Score: <span id="high-score">--</span>ms</p>
-            <p>Your Average: <span id="average-score">--</span>ms</p>
-
-
-        </div>
+    <h1 id="target">Click to Start</h1>
+    <p id="result">Wait for the screen to turn green!</p>
+    <div class="stats">
+        <p>Your High Score: <span id="high-score">--</span>ms</p>
+        <p>Your Average: <span id="average-score">--</span>ms</p>
+    </div>
 </div>
-
-
-
 
 <script>
     const targetText = document.getElementById('target');
-const resultDisplay = document.getElementById('result');
-const highScoreDisplay = document.getElementById('high-score');
-const averageDisplay = document.getElementById('average-score');
-let startTime;
-let timeout;
-let gameStarted = false;
-let waitingForGreen = false;
-let allScores = [];
-let highScore = localStorage.getItem('bestReactionTime') || Infinity;
-if (highScore !== Infinity) highScoreDisplay.innerText = highScore;
-document.body.addEventListener('mousedown', () => {
-    if (!gameStarted && !waitingForGreen) {
-        gameStarted = true;
-        waitingForGreen = true;
-        document.body.style.backgroundColor = "#2c3e50"; // Dark Grey
-        targetText.innerText = "Wait...";
-        resultDisplay.innerText = "Focus on the background!";
+    const resultDisplay = document.getElementById('result');
+    const highScoreDisplay = document.getElementById('high-score');
+    const averageDisplay = document.getElementById('average-score');
 
-        const randomDelay = Math.random() * 3000 + 2000;
-        timeout = setTimeout(() => {
-        target.style.backgroundColor = "green";
-        target.innerText = "CLICK NOW!";
-        startTime = performance.now();
-        }, delay); 
+    let startTime;
+    let timeout;
+    let gameStarted = false;
+    let waitingForGreen = false;
+    let allScores = [];
+    let highScore = localStorage.getItem('bestReactionTime') || Infinity;
+    if (highScore !== Infinity) highScoreDisplay.innerText = highScore;
+
+    document.body.addEventListener('mousedown', () => {
+        if (!gameStarted && !waitingForGreen) {
+            
+            gameStarted = true;
+            waitingForGreen = true;
+            document.body.style.backgroundColor = "#2c3e50"; 
+            targetText.innerText = "Wait...";
+            resultDisplay.innerText = "Focus...";
+
+            const randomDelay = Math.random() * 3100 + 2000; 
+
+            timeout = setTimeout(() => {
+            
+                document.body.style.backgroundColor = "#2ecc71"; 
+                targetText.innerText = "Click now!";
+                startTime = performance.now();
+                waitingForGreen = false;
+            }, randomDelay);
+
+        } else if (gameStarted && !waitingForGreen) {
+            
+            const reactionTime = Math.round(performance.now() - startTime);
+            gameStarted = false;
+            document.body.style.backgroundColor = "#3498db"; 
+            
+            targetText.innerText = reactionTime + "ms";
+            resultDisplay.innerText = "Click to try again!";
+            if (reactionTime < highScore) {
+                highScore = reactionTime;
+                localStorage.setItem('bestReactionTime', highScore);
+                highScoreDisplay.innerText = highScore;
+            }
+            allScores.push(reactionTime);
+            const avg = Math.round(allScores.reduce((a, b) => a + b) / allScores.length);
+            averageDisplay.innerText = avg;
+
+        } else if (waitingForGreen) {
+            clearTimeout(timeout);
+            waitingForGreen = false;
+            gameStarted = false;
+            document.body.style.backgroundColor = "#e74c3c"; 
+            targetText.innerText = "Too early!";
+            resultDisplay.innerText = "Click to restart.";
+        }
+    });
 </script>
 
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
 </html>
